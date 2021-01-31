@@ -1,0 +1,25 @@
+.blog{
+    margin-top:100px;
+    
+}
+.banner{
+    background-image:url("../images/Loginbg.png");
+    background-repeat:no-repeat;
+    background-size: cover;
+}
+
+.img60{
+    height:60px ;
+}
+
+.img26{
+    height:26px;
+
+}
+.error{
+    background: orangered;
+    color:#fff;
+    padding: 5px;
+    margin:5px
+
+}

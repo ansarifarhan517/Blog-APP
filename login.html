@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Login | Blog App</title>
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body class="banner">
+    <div class="container">
+        <div class="row blog">
+            <div class="col-md-4 offset-md-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h3 class="card-title text-center">Blog App</h3>
+                        <form>
+                            <div class="msg"></div>
+                            <div class="form-group">
+                                <label for="username">User Name</label>
+                                <input type="text" class="form-control" placeholder="Enter username" id="username">
+                                <div class="invalid-feedback"></div>
+                            </div>
+                            <div class="form-group">
+                                <label for="password">Password</label>
+                                <input type="password" class="form-control" id="password" placeholder="Enter password">
+                                <div class="invalid-feedback"></div>
+                            </div>
+                            <button type="submit" class="btn btn-primary btn-block">Login</button>
+
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/app.js"></script>
+    <script src="/js/jquery-3.5.1.min.js"></script>
+    <script src="/js/bootstrap.bundle.min.js"></script>
+    <script>
+        $(function () {
+            const user = JSON.parse(localStorage.getItem(CONSTANTS.LOCAL_STORAGE_KEY));
+            if (user) {
+                location.href = `${CONSTANTS.APP_URL}dashboard.html`
+            } else {
+                $('body').removeClass('d-none');
+
+            }
+        });
+        const form = document.querySelector('form');
+        const username = document.querySelector('#username');
+        const password = document.querySelector('#password');
+
+
+
+        form.addEventListener('submit', onSubmit);
+        username.addEventListener('keyup', validateUsername);
+        password.addEventListener('keyup', validatePassword);
+
+        function validateUsername() {
+            if (username.value === '') {
+                username.classList.remove('is-valid');
+                username.classList.add('is-invalid');
+                username.nextElementSibling.textContent = 'This field is required';
+                return false;
+            }
+            username.classList.remove('is-invalid');
+            username.classList.add('is-valid');
+            username.nextElementSibling.textContent = '';
+            return true;
+        }
+
+        function validatePassword() {
+            if (password.value === '') {
+                password.classList.remove('is-valid');
+                password.classList.add('is-invalid');
+                password.nextElementSibling.textContent = 'This field is required';
+                return false;
+            }
+
+            if (password.value.length < 3) {
+                password.classList.remove('is-valid');
+                password.classList.add('is-invalid');
+                password.nextElementSibling.textContent = 'please enter more than 3';
+                return false;
+            }
+            password.classList.remove('is-invalid');
+            password.classList.add('is-valid');
+            password.nextElementSibling.textContent = '';
+            return true;
+
+        }
+
+        function isValid() {
+            const isUserName = validateUsername();
+            const isPassword = validatePassword();
+            return isUserName && isPassword;
+        }
+
+        function onSubmit(e) {
+            e.preventDefault();
+            if (!isValid()) {
+                return;
+            }
+            else {
+                const data = {
+                    username: username.value,
+                    password: password.value
+                }
+                console.log(data);
+                $.ajax({
+                    type: 'POST',
+                    url: `${CONSTANTS.API_URL}accounts/login`,
+                    datatype: 'json',
+                    contentType: 'application/json',
+                    data: JSON.stringify(data),
+                    success: (response) => {
+                        console.log(response);
+                        localStorage.setItem(CONSTANTS.LOCAL_STORAGE_KEY, JSON.stringify(response));
+                        location.href = `${CONSTANTS.APP_URL}dashboard.html`
+                    },
+                    error: (error) => {
+                        console.log(error);
+
+                    }
+                });
+            }
+        };
+
+
+
+
+
+    </script>
+</body>
+
+</html>
